@@ -1,7 +1,7 @@
 {
   "name": "reprograma-coding-dojo",
   "version": "1.0.0",
-  "description": "",
+  "description": "API construída durante o exercício de conding-dojo da Reprograma.",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
@@ -18,5 +18,13 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnnaNee/reprograma-coding-dojo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AnnaNee/reprograma-coding-dojo/issues"
+  },
+  "homepage": "https://github.com/AnnaNee/reprograma-coding-dojo#readme"
 }

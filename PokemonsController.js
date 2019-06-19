@@ -1,14 +1,24 @@
-const { connect } = require('./PokemonsRepository')
+const {
+  connect
+} = require('./PokemonsRepository')
 const pokemonsModel = require('./PokemonsSchema')
 
 connect() // para conectar no mongoDB
 
-const calcularNivel = dates => {
-  const diff = date.dataInicio.valueOf() - dataFim.valueOf();
-  const horas = diff / 1000 / 60 / 60;
+const limiteNivel = 150
+
+const calcularNivel = (datas, pokemons) => {
+  const diff = Math.abs(new Date(datas.dataInicio) - new Date(datas.dataFim)) / 3600000
+  const resultado = pokemons.nivel + diff / 4
+
+  if(resultado >= limiteNivel) {
+    return limiteNivel
+  } 
+
+  return resultado
 }
 
-const getAll = async () => {
+const getAll = () => {
   return pokemonsModel.find((error, pokemons) => {
     return pokemons
   })
@@ -29,9 +39,30 @@ const remove = (id) => {
 
 const update = (id, pokemon) => {
   return pokemonsModel.findByIdAndUpdate(
-    id,
-    { $set: pokemon },
-    { new: true },
+    id, {
+      $set: pokemon
+    }, {
+      new: true
+    },
+  )
+}
+
+const treinar = async (id, datas) => {
+  const pokemon = await pokemonsModel.findById(id)
+  // let calculoNivel = calcularNivel(datas, pokemon) 
+
+  // if (calculoNivel >= 150) {
+  //   calculoNivel = 150
+  // }
+
+  return pokemonsModel.findByIdAndUpdate(
+    id, {
+      $set: {
+        nivel: calcularNivel(datas, pokemon)
+      }
+    }, {
+      new: true
+    }
   )
 }
 
@@ -40,5 +71,6 @@ module.exports = {
   getById,
   add,
   remove,
-  update
+  update,
+  treinar
 }
