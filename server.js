@@ -3,6 +3,8 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const servidor = express()
 const controller = require('./PokemonsController')
+const params = require('params')
+const parametrosPermitidos = require('./parametrosPermitidos')
 const PORT = 3000
 
 const logger = (request, response, next) => {
@@ -48,8 +50,7 @@ servidor.get('/pokemons/:pokemonId', (request, response) => {
 })
 
 servidor.delete('/pokemons/:id', (request, response) => {
-  const id = request.params.id
-  controller.remove(id)
+  controller.remove(request.params.id)
     .then(resultado => {
       if (!resultado) {
         response.send(404)
@@ -63,8 +64,7 @@ servidor.delete('/pokemons/:id', (request, response) => {
 })
 
 servidor.patch('/pokemons/:id', (request, response) => {
-  const id = request.params.id
-  controller.update(id, request.body)
+  controller.update(request.params.id, params(request.body).only(parametrosPermitidos.update))
     .then(pokemon => {
       if (!pokemon) {
         response.sendStatus(404)
@@ -82,8 +82,7 @@ servidor.patch('/pokemons/:id', (request, response) => {
 })
 
 servidor.patch('/pokemons/treinar/:id', (request, response) => {
-  const id = request.params.id
-  controller.treinar(id, request.body)
+  controller.treinar(request.params.id, params(request.body).only(parametrosPermitidos.treinar))
     .then(pokemon => {
       if (!pokemon) {
         response.sendStatus(404)
@@ -105,7 +104,7 @@ servidor.patch('/pokemons/treinar/:id', (request, response) => {
 })
 
 servidor.post('/pokemons', (request, response) => {
-  controller.add(request.body)
+  controller.add(params(request.body).only(parametrosPermitidos.add))
     .then(pokemon => {
       const _id = pokemon._id
       response.send(_id)
